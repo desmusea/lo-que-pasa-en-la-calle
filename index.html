@@ -1,0 +1,118 @@
+<html>
+  <head>
+    <script src='https://aframe.io/releases/1.2.0/aframe.min.js'></script>
+    <link rel='stylesheet' href='style.css'>
+  </head>
+  <body>
+    <div> 
+      <button class='button info' id='infoButton' onclick='toggleInfo()'>info</button>
+      <button class='button dentro' id='dentroButton' onclick='goDentro()'>dentro</button>
+      <button class='button fuera' id='fueraButton' onclick='goFuera()'>fuera</button>
+      <button class='button casita' id='casitaButton' onclick='goCasita()'>casita</button>
+      <div class='description'>
+        <div class='text hidden' id='text'>
+          Entendiendo la mediación cultural como el ejercicio de crear nuevos vehículos de conversación entre públicos y colecciones, en este taller reflexionaremos y experimentaremos esta práctica en su dimensión digital. 
+          Atendiendo a las infinitas posibilidades discursivas que un museo puede ofrecer, desarrollaremos un proyecto de mediación cultural partiendo de dos espacios: el interior y el exterior del MAPI, el Museo Precolombino de Arte Precolombino e Indígena de Montevideo. Apropiándonos de su versión virtualizada en Google Maps, desarrollaremos nuestro propio museo virtual, intervenido con un lenguaje poético y propio.
+        </div>
+      </div>
+    </div>
+    <a-scene>
+      <a-sky id='home' src='./home.jpg'></a-sky>
+      <a-sky id='fuera' visible='false' src='./src/exterior/exterior_montevideo.jpg'></a-sky>
+      <a-sky id='dentro' visible='false' src='./src/interior/1.jpg'></a-sky>
+      <a-entity id="dentroaudio" position="-10 0 0" sound="src: url(./src/interior/interiorsound.mp4);"></a-entity>
+      <a-entity id="exterioraudio" position="-10 0 0" sound="src: url(./src/exterior/exterioraudio.mp3);"></a-entity>
+    </a-scene>
+  </body>
+
+  <script type='text/javascript'>
+    let fueraInterval;
+    let dentroTimeout;
+    let dentroSecondTimeout;
+    const dentro = document.getElementById('dentro');
+    const fuera = document.getElementById('fuera');
+    const home = document.getElementById('home');
+    const casitaButton = document.getElementById('casitaButton');
+    const infoButton = document.getElementById('infoButton');
+    const fueraButton = document.getElementById('fueraButton');
+    const dentroButton = document.getElementById('dentroButton');
+    const audioFuera = document.getElementById('exterioraudio');
+    const audioDentro = document.getElementById('dentroaudio');
+
+    function changeBackground() {
+      const locations = [
+        './src/exterior/exterior_paris.jpg',
+        './src/exterior/exterior_newyork.jpg',
+        './src/exterior/exterior_montevideo.jpg',
+        './src/exterior/exterior_buenosaires.jp'
+      ]
+      const index = Math.floor(Math.random() * 2);
+      const newLocation = locations[index]
+      fuera.setAttribute('src', newLocation)
+    }
+
+    function setSecondInterior() {
+      dentro.setAttribute('src', './src/interior/2.jpg')
+    }
+
+    function setThirdInterior() {
+      dentro.setAttribute('src', './src/interior/3.jpg')
+    }
+  
+    function goCasita() {
+      home.setAttribute('visible', 'true')
+      document.getElementById('fuera').setAttribute('visible', 'false')
+      dentro.setAttribute('visible', 'false')
+      audioFuera.components.sound.stopSound();
+      audioDentro.components.sound.stopSound();
+     
+      casitaButton.classList.add('blurry')
+      fueraButton.classList.remove('blurry')
+      dentroButton.classList.remove('blurry')
+      clearTimeout(dentroTimeout);
+      clearInterval(fueraInterval);
+    }
+
+    function toggleInfo() {
+      const text = document.getElementById('text');
+
+      if (text.classList.contains('hidden')) {
+        text.classList.remove('hidden')
+        infoButton.classList.add('blurry')
+      } else {
+        text.classList.add('hidden')
+        infoButton.classList.remove('blurry')
+      }
+    }
+  
+    function goFuera() {
+      home.setAttribute('visible', 'false')
+      document.getElementById('fuera').setAttribute('visible', 'true')
+      dentro.setAttribute('visible', 'false')
+      audioFuera.components.sound.playSound();
+      audioDentro.components.sound.stopSound();
+      clearTimeout(dentroTimeout)
+      dentroSecondTimeout && clearTimeout(dentroSecondTimeout)
+      fueraInterval = setInterval(changeBackground, 6000);
+      fueraButton.classList.add('blurry')
+      dentroButton.classList.remove('blurry')
+      casitaButton.classList.remove('blurry')
+      fuera.setAttribute('src', './src/exterior/exterior_montevideo.jpg')
+    }
+
+    function goDentro() {
+      audioFuera.components.sound.stopSound();
+      audioDentro.components.sound.playSound();
+      dentro.setAttribute('src', './src/interior/1.jpg')
+      clearInterval(fueraInterval);
+      dentroTimeout = setTimeout(setSecondInterior, 7000);
+      dentroSecondTimeout = setTimeout(setThirdInterior, 32000);
+      dentroButton.classList.add('blurry')
+      fueraButton.classList.remove('blurry')
+      casitaButton.classList.remove('blurry')
+      home.setAttribute('visible', 'false')
+      dentro.setAttribute('visible', 'true')
+      fuera.setAttribute('visible', 'false')
+    }
+    </script>
+</html>
