@@ -1,7 +1,11 @@
 <html>
   <head>
     <script src='https://aframe.io/releases/1.2.0/aframe.min.js'></script>
-    <link rel='stylesheet' href='style.css'>
+    <link rel='stylesheet' href='./src/style.css'>
+    <title>Lo que pasa en la calle</title>
+    <meta name="author" content="desmusea">
+    <meta name="description" content="FAPTEK MAPI y DESMUSEA">
+    <meta property="og:image" content="./src/exterior/exterior_montevideo.jpg">
   </head>
   <body>
     <div> 
@@ -17,7 +21,7 @@
       </div>
     </div>
     <a-scene>
-      <a-sky id='home' src='./home.jpg'></a-sky>
+      <a-sky id='home' src='./src/home.jpg'></a-sky>
       <a-sky id='fuera' visible='false' src='./src/exterior/exterior_montevideo.jpg'></a-sky>
       <a-sky id='dentro' visible='false' src='./src/interior/1.jpg'></a-sky>
       <a-entity id="dentroaudio" position="-10 0 0" sound="src: url(./src/interior/interiorsound.mp4);"></a-entity>
