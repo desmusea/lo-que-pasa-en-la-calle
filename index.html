@@ -15,8 +15,7 @@
       <button class='button casita' id='casitaButton' onclick='goCasita()'>zoom</button>
       <div class='description'>
         <div class='text hidden' id='text'>
-          Entendiendo la mediación cultural como el ejercicio de crear nuevos vehículos de conversación entre públicos y colecciones, en este taller reflexionaremos y experimentaremos esta práctica en su dimensión digital. 
-          Atendiendo a las infinitas posibilidades discursivas que un museo puede ofrecer, desarrollaremos un proyecto de mediación cultural partiendo de dos espacios: el interior y el exterior del MAPI, el Museo Precolombino de Arte Precolombino e Indígena de Montevideo. Apropiándonos de su versión virtualizada en Google Maps, desarrollaremos nuestro propio museo virtual, intervenido con un lenguaje poético y propio.
+          Con motivo del FAP-TEK, Festival de Arte y Pensamiento TEK del Centro Cultural de España en Montevideo, Desmusea propuso un ejercicio de mediación digital en torno al Museo de Arte Precolombino e Indígena. Dos lecturas que, desde las lógicas y poéticas de la virtualidad, intervinieran dos espacios 360º del MAPI sacados de Google Street View para enriquecerlos con dimensiones emocionales, narrativas y propias. El espacio de fuera reflexiona así sobre el museo y el espacio circundante, mientras que el de dentro aborda las ambivalencias que ocupan el interior. 
         </div>
       </div>
     </div>
@@ -24,8 +23,8 @@
       <a-sky id='home' src='./src/home.jpg'></a-sky>
       <a-sky id='fuera' visible='false' src='./src/exterior/exterior_montevideo.jpg'></a-sky>
       <a-sky id='dentro' visible='false' src='./src/interior/1.jpg'></a-sky>
-      <a-entity id="dentroaudio" position="-10 0 0" sound="src: url(./src/interior/interiorsound.mp4);"></a-entity>
-      <a-entity id="exterioraudio" position="-10 0 0" sound="src: url(./src/exterior/exterioraudio.mp3);"></a-entity>
+      <a-entity id="dentroaudio" position="-10 0 0" sound="src: url(./src/interior/interiorsound.mp4); loop: true;"></a-entity>
+      <a-entity id="exterioraudio" position="-10 0 0" sound="src: url(./src/exterior/exterioraudio.mp3); loop: true; volume: 0.5;"></a-entity>
     </a-scene>
   </body>
 
@@ -33,6 +32,7 @@
     let fueraInterval;
     let dentroTimeout;
     let dentroSecondTimeout;
+    let dentroGlobalTimeout;
     const dentro = document.getElementById('dentro');
     const fuera = document.getElementById('fuera');
     const home = document.getElementById('home');
@@ -42,6 +42,13 @@
     const dentroButton = document.getElementById('dentroButton');
     const audioFuera = document.getElementById('exterioraudio');
     const audioDentro = document.getElementById('dentroaudio');
+    const text = document.getElementById('text');
+
+    function setInterior() {
+      setFirstInterior()
+      dentroTimeout = setTimeout(setSecondInterior, 7000);
+      dentroSecondTimeout = setTimeout(setThirdInterior, 32000);
+    }
 
     function changeBackground() {
       const locations = [
@@ -55,6 +62,10 @@
       fuera.setAttribute('src', newLocation)
     }
 
+    function setFirstInterior() {
+      dentro.setAttribute('src', './src/interior/1.jpg')
+    }
+
     function setSecondInterior() {
       dentro.setAttribute('src', './src/interior/2.jpg')
     }
@@ -64,6 +75,8 @@
     }
   
     function goCasita() {
+      text.innerText = ''
+      text.innerText = 'El zoom'
       home.setAttribute('visible', 'true')
       document.getElementById('fuera').setAttribute('visible', 'false')
       dentro.setAttribute('visible', 'false')
@@ -73,13 +86,13 @@
       casitaButton.classList.add('blurry')
       fueraButton.classList.remove('blurry')
       dentroButton.classList.remove('blurry')
-      clearTimeout(dentroTimeout);
+      clearInterval(dentroGlobalTimeout);
+      dentroTimeout && clearTimeout(dentroTimeout);
+      dentroSecondTimeout && clearTimeout(dentroSecondTimeout);
       clearInterval(fueraInterval);
     }
 
     function toggleInfo() {
-      const text = document.getElementById('text');
-
       if (text.classList.contains('hidden')) {
         text.classList.remove('hidden')
         infoButton.classList.add('blurry')
@@ -90,12 +103,15 @@
     }
   
     function goFuera() {
+      text.innerText = ''
+      text.innerText = 'El MAPI a través de su programa de actividades “El MAPI va a la calle” usa desde hace tiempo la ciudad como escenario museográfico. Su barrio, Ciudad Vieja, es una zona de identidad cambiante y multicultural. La vista de Google Street View del exterior del museo no registra los diferentes acentos que se escuchan en la zona, los olores de la comida que ofrecen sus restaurantes, ni el proceso de gentrificación que está atravesando. La herencia colonial de su arquitectura hace que Ciudad Vieja sea con frecuencia además un escenario para rodajes de series y películas. La ciudad se disfraza entonces de otras ciudades: a veces es París, otras veces Nueva York… Partiendo de esas dimensiones perdidas, y en el ejercicio de imaginar otros ‘fueras’ para el MAPI, convertimos esta visión extinta de la calle 25 de Mayo en otras ciudades posibles, y nos preguntamos: si el museo tiene la potencialidad de afectar el barrio, ¿cómo afecta el barrio al museo?'
       home.setAttribute('visible', 'false')
       document.getElementById('fuera').setAttribute('visible', 'true')
       dentro.setAttribute('visible', 'false')
       audioFuera.components.sound.playSound();
       audioDentro.components.sound.stopSound();
-      clearTimeout(dentroTimeout)
+      clearInterval(dentroGlobalTimeout);
+      dentroTimeout && clearTimeout(dentroTimeout)
       dentroSecondTimeout && clearTimeout(dentroSecondTimeout)
       fueraInterval = setInterval(changeBackground, 6000);
       fueraButton.classList.add('blurry')
@@ -105,12 +121,14 @@
     }
 
     function goDentro() {
+      text.innerText = ''
+      text.innerText = 'El interior del MAPI nos habla de un devenir temporal, un relato histórico, social, identitario, que tuvo lugar en su espacio y que ha quedado súbitamente detenida en un presente pandémico, ocupado por la ausencia. O quizás cabe imaginar este museo vacío como un museo futuro, post-humano. En este juego de temporalidades especulativas, el interior del MAPI regresa a un pasado que pudo ser y nunca fue (su origen como establecimiento hidro-terápico) Y más atrás aún, regresa a un pasado que quizás fue: una selva precolombina que se abre paso a través de los muros, donde las piezas de las vitrinas conectan con su contexto originario, para regresar después al silencio inicial. '
       audioFuera.components.sound.stopSound();
       audioDentro.components.sound.playSound();
       dentro.setAttribute('src', './src/interior/1.jpg')
       clearInterval(fueraInterval);
-      dentroTimeout = setTimeout(setSecondInterior, 7000);
-      dentroSecondTimeout = setTimeout(setThirdInterior, 32000);
+      setInterior()
+      dentroGlobalTimeout = setInterval(setInterior, 62000)
       dentroButton.classList.add('blurry')
       fueraButton.classList.remove('blurry')
       casitaButton.classList.remove('blurry')
