@@ -8,13 +8,16 @@
     <meta property="og:image" content="./src/exterior/exterior_montevideo.jpg">
   </head>
   <body>
-    <div> 
-      <button class='button info' id='infoButton' onclick='toggleInfo()'>texto</button>
+      <div id="box1" class="box box1"></div>
+      <div id="box2" class="box box2"></div>
+      <div id="box3" class="box box3"></div>
+      <div id="box4" class="box box4"></div>
+      <button class='button info selected' id='infoButton' onclick='goCasita()'>lo que pasa en la calle</button>
       <button class='button dentro' id='dentroButton' onclick='goDentro()'>dentro</button>
       <button class='button fuera' id='fueraButton' onclick='goFuera()'>fuera</button>
-      <button class='button casita' id='casitaButton' onclick='goCasita()'>zoom</button>
+      <button class='button casita' id='casitaButton' onclick='toggleInfo()'>🔒</button>
       <div class='description'>
-        <div class='text hidden' id='text'>
+        <div class='text' id='text'>
           Con motivo del FAP-TEK, Festival de Arte y Pensamiento TEK del Centro Cultural de España en Montevideo, Desmusea propuso un ejercicio de mediación digital en torno al Museo de Arte Precolombino e Indígena. Dos lecturas que, desde las lógicas y poéticas de la virtualidad, intervinieran dos espacios 360º del MAPI sacados de Google Street View para enriquecerlos con dimensiones emocionales, narrativas y propias. El espacio de fuera reflexiona así sobre el museo y el espacio circundante, mientras que el de dentro aborda las ambivalencias que ocupan el interior. 
         </div>
       </div>
@@ -36,6 +39,11 @@
     const dentro = document.getElementById('dentro');
     const fuera = document.getElementById('fuera');
     const home = document.getElementById('home');
+    const box1 = document.getElementById('box1');
+    const box2 = document.getElementById('box2');
+    const box3 = document.getElementById('box3');
+    const box4 = document.getElementById('box4');
+
     const casitaButton = document.getElementById('casitaButton');
     const infoButton = document.getElementById('infoButton');
     const fueraButton = document.getElementById('fueraButton');
@@ -73,19 +81,34 @@
     function setThirdInterior() {
       dentro.setAttribute('src', './src/interior/3.jpg')
     }
-  
+
+    function hideBoxes() {
+      box1.classList.add('hidden')
+      box2.classList.add('hidden')
+      box3.classList.add('hidden')
+      box4.classList.add('hidden')
+    }
+
+    function showBoxes() {
+      box1.classList.remove('hidden')
+      box2.classList.remove('hidden')
+      box3.classList.remove('hidden')
+      box4.classList.remove('hidden')
+    }
+
     function goCasita() {
       text.innerText = ''
-      text.innerText = 'El zoom'
+      text.innerText = 'Con motivo del FAP-TEK, Festival de Arte y Pensamiento TEK del Centro Cultural de España en Montevideo, Desmusea propuso un ejercicio de mediación digital en torno al Museo de Arte Precolombino e Indígena. Dos lecturas que, desde las lógicas y poéticas de la virtualidad, intervinieran dos espacios 360º del MAPI sacados de Google Street View para enriquecerlos con dimensiones emocionales, narrativas y propias. El espacio de fuera reflexiona así sobre el museo y el espacio circundante, mientras que el de dentro aborda las ambivalencias que ocupan el interior.'
       home.setAttribute('visible', 'true')
       document.getElementById('fuera').setAttribute('visible', 'false')
       dentro.setAttribute('visible', 'false')
       audioFuera.components.sound.stopSound();
       audioDentro.components.sound.stopSound();
-     
-      casitaButton.classList.add('blurry')
-      fueraButton.classList.remove('blurry')
-      dentroButton.classList.remove('blurry')
+
+      infoButton.classList.add('selected')
+      fueraButton.classList.remove('selected')
+      dentroButton.classList.remove('selected')
+
       clearInterval(dentroGlobalTimeout);
       dentroTimeout && clearTimeout(dentroTimeout);
       dentroSecondTimeout && clearTimeout(dentroSecondTimeout);
@@ -95,10 +118,12 @@
     function toggleInfo() {
       if (text.classList.contains('hidden')) {
         text.classList.remove('hidden')
-        infoButton.classList.add('blurry')
+        casitaButton.innerText = '🔒'
+        showBoxes()
       } else {
         text.classList.add('hidden')
-        infoButton.classList.remove('blurry')
+        casitaButton.innerText = '🔓'
+        hideBoxes()
       }
     }
   
@@ -111,12 +136,12 @@
       audioFuera.components.sound.playSound();
       audioDentro.components.sound.stopSound();
       clearInterval(dentroGlobalTimeout);
-      dentroTimeout && clearTimeout(dentroTimeout)
-      dentroSecondTimeout && clearTimeout(dentroSecondTimeout)
+      dentroTimeout && clearTimeout(dentroTimeout);
+      dentroSecondTimeout && clearTimeout(dentroSecondTimeout);
       fueraInterval = setInterval(changeBackground, 6000);
-      fueraButton.classList.add('blurry')
-      dentroButton.classList.remove('blurry')
-      casitaButton.classList.remove('blurry')
+      fueraButton.classList.add('selected')
+      dentroButton.classList.remove('selected')
+      infoButton.classList.remove('selected')
       fuera.setAttribute('src', './src/exterior/exterior_montevideo.jpg')
     }
 
@@ -129,9 +154,9 @@
       clearInterval(fueraInterval);
       setInterior()
       dentroGlobalTimeout = setInterval(setInterior, 62000)
-      dentroButton.classList.add('blurry')
-      fueraButton.classList.remove('blurry')
-      casitaButton.classList.remove('blurry')
+      dentroButton.classList.add('selected')
+      fueraButton.classList.remove('selected')
+      infoButton.classList.remove('selected')
       home.setAttribute('visible', 'false')
       dentro.setAttribute('visible', 'true')
       fuera.setAttribute('visible', 'false')
