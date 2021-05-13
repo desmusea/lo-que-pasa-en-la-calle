@@ -8,14 +8,14 @@
     <meta property="og:image" content="./src/exterior/exterior_montevideo.jpg">
   </head>
   <body>
-      <div id="box1" class="box box1"></div>
-      <div id="box2" class="box box2"></div>
-      <div id="box3" class="box box3"></div>
-      <div id="box4" class="box box4"></div>
+      <div id="box1" class="box box1 hidden"></div>
+      <div id="box2" class="box box2 hidden"></div>
+      <div id="box3" class="box box3 hidden"></div>
+      <div id="box4" class="box box4 hidden"></div>
       <button class='button info selected' id='infoButton' onclick='goCasita()'>lo que pasa en la calle</button>
       <button class='button dentro' id='dentroButton' onclick='goDentro()'>dentro</button>
       <button class='button fuera' id='fueraButton' onclick='goFuera()'>fuera</button>
-      <button class='button casita' id='casitaButton' onclick='toggleInfo()'>🔒</button>
+      <button class='button casita hidden' id='casitaButton' onclick='toggleInfo()'>🔒</button>
       <div class='description'>
         <div class='text' id='text'>
           Con motivo del FAP-TEK, Festival de Arte y Pensamiento TEK del Centro Cultural de España en Montevideo, Desmusea propuso un ejercicio de mediación digital en torno al Museo de Arte Precolombino e Indígena. Dos lecturas que, desde las lógicas y poéticas de la virtualidad, intervinieran dos espacios 360º del MAPI sacados de Google Street View para enriquecerlos con dimensiones emocionales, narrativas y propias. El espacio de fuera reflexiona así sobre el museo y el espacio circundante, mientras que el de dentro aborda las ambivalencias que ocupan el interior. 
@@ -83,6 +83,8 @@
     }
 
     function hideBoxes() {
+      text.classList.add('hidden')
+      casitaButton.innerText = '🔓'
       box1.classList.add('hidden')
       box2.classList.add('hidden')
       box3.classList.add('hidden')
@@ -90,6 +92,8 @@
     }
 
     function showBoxes() {
+      text.classList.remove('hidden')
+      casitaButton.innerText = '🔒'
       box1.classList.remove('hidden')
       box2.classList.remove('hidden')
       box3.classList.remove('hidden')
@@ -97,6 +101,8 @@
     }
 
     function goCasita() {
+      hideBoxes()
+      casitaButton.classList.add('hidden')
       text.innerText = ''
       text.innerText = 'Con motivo del FAP-TEK, Festival de Arte y Pensamiento TEK del Centro Cultural de España en Montevideo, Desmusea propuso un ejercicio de mediación digital en torno al Museo de Arte Precolombino e Indígena. Dos lecturas que, desde las lógicas y poéticas de la virtualidad, intervinieran dos espacios 360º del MAPI sacados de Google Street View para enriquecerlos con dimensiones emocionales, narrativas y propias. El espacio de fuera reflexiona así sobre el museo y el espacio circundante, mientras que el de dentro aborda las ambivalencias que ocupan el interior.'
       home.setAttribute('visible', 'true')
@@ -117,17 +123,15 @@
 
     function toggleInfo() {
       if (text.classList.contains('hidden')) {
-        text.classList.remove('hidden')
-        casitaButton.innerText = '🔒'
         showBoxes()
       } else {
-        text.classList.add('hidden')
-        casitaButton.innerText = '🔓'
         hideBoxes()
       }
     }
   
     function goFuera() {
+      casitaButton.classList.remove('hidden')
+      showBoxes()
       text.innerText = ''
       text.innerText = 'El MAPI a través de su programa de actividades “El MAPI va a la calle” usa desde hace tiempo la ciudad como escenario museográfico. Su barrio, Ciudad Vieja, es una zona de identidad cambiante y multicultural. La vista de Google Street View del exterior del museo no registra los diferentes acentos que se escuchan en la zona, los olores de la comida que ofrecen sus restaurantes, ni el proceso de gentrificación que está atravesando. La herencia colonial de su arquitectura hace que Ciudad Vieja sea con frecuencia además un escenario para rodajes de series y películas. La ciudad se disfraza entonces de otras ciudades: a veces es París, otras veces Nueva York… Partiendo de esas dimensiones perdidas, y en el ejercicio de imaginar otros ‘fueras’ para el MAPI, convertimos esta visión extinta de la calle 25 de Mayo en otras ciudades posibles, y nos preguntamos: si el museo tiene la potencialidad de afectar el barrio, ¿cómo afecta el barrio al museo?'
       home.setAttribute('visible', 'false')
@@ -146,6 +150,8 @@
     }
 
     function goDentro() {
+      casitaButton.classList.remove('hidden')
+      showBoxes()
       text.innerText = ''
       text.innerText = 'El interior del MAPI nos habla de un devenir temporal, un relato histórico, social, identitario, que tuvo lugar en su espacio y que ha quedado súbitamente detenida en un presente pandémico, ocupado por la ausencia. O quizás cabe imaginar este museo vacío como un museo futuro, post-humano. En este juego de temporalidades especulativas, el interior del MAPI regresa a un pasado que pudo ser y nunca fue (su origen como establecimiento hidro-terápico) Y más atrás aún, regresa a un pasado que quizás fue: una selva precolombina que se abre paso a través de los muros, donde las piezas de las vitrinas conectan con su contexto originario, para regresar después al silencio inicial. '
       audioFuera.components.sound.stopSound();
