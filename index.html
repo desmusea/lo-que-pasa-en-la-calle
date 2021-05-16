@@ -1,10 +1,14 @@
-<html>
+<!DOCTYPE html>
+<html lang="es">
   <head>
     <script src='https://aframe.io/releases/1.2.0/aframe.min.js'></script>
     <link rel='stylesheet' href='./src/style.css'>
+    <link rel="preload" as="image" crossOrigin="anonymous" href="./src/home.jpg">
+    <link rel="preload" as="image" crossOrigin="anonymous" href="./src/interior/1.jpg">
+    <link rel="preload" as="image" crossOrigin="anonymous" href="./src/exterior/exterior_montevideo.jpg">
     <title>Lo que pasa en la calle</title>
-    <meta name="author" content="desmusea">
-    <meta name="description" content="FAPTEK MAPI y DESMUSEA">
+    <meta name="author" content="Desmusea">
+    <meta name="description" content="Resultado del taller de mediación cultural digital 'Lo que pasa en la calle', dirigido por Desmusea para la primera edición del Festival de Arte, Pensamiento y Tecnología FAP-TEK del Centro Cultural de España en Montevideo">
     <meta property="og:image" content="./src/exterior/exterior_montevideo.jpg">
   </head>
   <body>
@@ -12,161 +16,33 @@
       <div id="box2" class="box box2 hidden"></div>
       <div id="box3" class="box box3 hidden"></div>
       <div id="box4" class="box box4 hidden"></div>
-      <button class='button info selected' id='infoButton' onclick='goCasita()'>lo que pasa en la calle</button>
-      <button class='button dentro' id='dentroButton' onclick='goDentro()'>dentro</button>
-      <button class='button fuera' id='fueraButton' onclick='goFuera()'>fuera</button>
-      <button class='button casita hidden' id='casitaButton' onclick='toggleInfo()'>🔒</button>
-      <div class='description'>
-        <div class='text' id='text'>
+      <header>
+        <button class='button info selected' id='infoButton' onclick='goHome()'>
+          lo que pasa en la calle
+        </button>
+      </header>
+      <nav>
+        <button class='button dentro' id='dentroButton' onclick='goDentro()'>dentro</button>
+        <button class='button fuera' id='fueraButton' onclick='goFuera()'>fuera</button>
+        <button class='button lock hidden' id='lockButton' onclick='toggleInfo()'>🔒</button>
+      </nav>
+      <article class='description'>
+        <p class='text' id='text'>
           Con motivo del FAP-TEK, Festival de Arte y Pensamiento TEK del Centro Cultural de España en Montevideo, Desmusea propuso un ejercicio de mediación digital en torno al Museo de Arte Precolombino e Indígena. Dos lecturas que, desde las lógicas y poéticas de la virtualidad, intervinieran dos espacios 360º del MAPI sacados de Google Street View para enriquecerlos con dimensiones emocionales, narrativas y propias. El espacio de fuera reflexiona así sobre el museo y el espacio circundante, mientras que el de dentro aborda las ambivalencias que ocupan el interior. 
-        </div>
-      </div>
-    </div>
+        </p>
+      </article>
     <a-scene>
+      <a-assets>
+        <audio id="interiorsound" src="./src/interior/interiorsound.mp4" preload="auto"></audio>
+        <audio id="exteriorsound" src="./src/exterior/exterioraudio.mp3" preload="auto"></audio>
+      </a-assets>
+
       <a-sky id='home' src='./src/home.jpg'></a-sky>
       <a-sky id='fuera' visible='false' src='./src/exterior/exterior_montevideo.jpg'></a-sky>
       <a-sky id='dentro' visible='false' src='./src/interior/1.jpg'></a-sky>
-      <a-entity id="dentroaudio" position="-10 0 0" sound="src: url(./src/interior/interiorsound.mp4); loop: true;"></a-entity>
-      <a-entity id="exterioraudio" position="-10 0 0" sound="src: url(./src/exterior/exterioraudio.mp3); loop: true; volume: 0.5;"></a-entity>
+      <a-entity id="dentroaudio" position="-10 0 0" sound="src: #interiorsound; loop: true;"></a-entity>
+      <a-entity id="exterioraudio" position="-10 0 0" sound="src: #exteriorsound; loop: true;"></a-entity>
     </a-scene>
+    <script type='text/javascript' src="./index.js"></script>
   </body>
-
-  <script type='text/javascript'>
-    let fueraInterval;
-    let dentroTimeout;
-    let dentroSecondTimeout;
-    let dentroGlobalTimeout;
-    const dentro = document.getElementById('dentro');
-    const fuera = document.getElementById('fuera');
-    const home = document.getElementById('home');
-    const box1 = document.getElementById('box1');
-    const box2 = document.getElementById('box2');
-    const box3 = document.getElementById('box3');
-    const box4 = document.getElementById('box4');
-
-    const casitaButton = document.getElementById('casitaButton');
-    const infoButton = document.getElementById('infoButton');
-    const fueraButton = document.getElementById('fueraButton');
-    const dentroButton = document.getElementById('dentroButton');
-    const audioFuera = document.getElementById('exterioraudio');
-    const audioDentro = document.getElementById('dentroaudio');
-    const text = document.getElementById('text');
-
-    function setInterior() {
-      setFirstInterior()
-      dentroTimeout = setTimeout(setSecondInterior, 7000);
-      dentroSecondTimeout = setTimeout(setThirdInterior, 32000);
-    }
-
-    function changeBackground() {
-      const locations = [
-        './src/exterior/exterior_paris.jpg',
-        './src/exterior/exterior_newyork.jpg',
-        './src/exterior/exterior_montevideo.jpg',
-        './src/exterior/exterior_buenosaires.jp'
-      ]
-      const index = Math.floor(Math.random() * 2);
-      const newLocation = locations[index]
-      fuera.setAttribute('src', newLocation)
-    }
-
-    function setFirstInterior() {
-      dentro.setAttribute('src', './src/interior/1.jpg')
-    }
-
-    function setSecondInterior() {
-      dentro.setAttribute('src', './src/interior/2.jpg')
-    }
-
-    function setThirdInterior() {
-      dentro.setAttribute('src', './src/interior/3.jpg')
-    }
-
-    function hideBoxes() {
-      text.classList.add('hidden')
-      casitaButton.innerText = '🔓'
-      box1.classList.add('hidden')
-      box2.classList.add('hidden')
-      box3.classList.add('hidden')
-      box4.classList.add('hidden')
-    }
-
-    function showBoxes() {
-      text.classList.remove('hidden')
-      casitaButton.innerText = '🔒'
-      box1.classList.remove('hidden')
-      box2.classList.remove('hidden')
-      box3.classList.remove('hidden')
-      box4.classList.remove('hidden')
-    }
-
-    function goCasita() {
-      hideBoxes()
-      text.classList.remove('hidden')
-      casitaButton.classList.add('hidden')
-      text.innerText = ''
-      text.innerText = 'Con motivo del FAP-TEK, Festival de Arte y Pensamiento TEK del Centro Cultural de España en Montevideo, Desmusea propuso un ejercicio de mediación digital en torno al Museo de Arte Precolombino e Indígena. Dos lecturas que, desde las lógicas y poéticas de la virtualidad, intervinieran dos espacios 360º del MAPI sacados de Google Street View para enriquecerlos con dimensiones emocionales, narrativas y propias. El espacio de fuera reflexiona así sobre el museo y el espacio circundante, mientras que el de dentro aborda las ambivalencias que ocupan el interior.'
-      home.setAttribute('visible', 'true')
-      document.getElementById('fuera').setAttribute('visible', 'false')
-      dentro.setAttribute('visible', 'false')
-      audioFuera.components.sound.stopSound();
-      audioDentro.components.sound.stopSound();
-
-      infoButton.classList.add('selected')
-      fueraButton.classList.remove('selected')
-      dentroButton.classList.remove('selected')
-
-      clearInterval(dentroGlobalTimeout);
-      dentroTimeout && clearTimeout(dentroTimeout);
-      dentroSecondTimeout && clearTimeout(dentroSecondTimeout);
-      clearInterval(fueraInterval);
-    }
-
-    function toggleInfo() {
-      if (text.classList.contains('hidden')) {
-        showBoxes()
-      } else {
-        hideBoxes()
-      }
-    }
-  
-    function goFuera() {
-      casitaButton.classList.remove('hidden')
-      showBoxes()
-      text.innerText = ''
-      text.innerText = 'El MAPI a través de su programa de actividades “El MAPI va a la calle” usa desde hace tiempo la ciudad como escenario museográfico. Su barrio, Ciudad Vieja, es una zona de identidad cambiante y multicultural. La vista de Google Street View del exterior del museo no registra los diferentes acentos que se escuchan en la zona, los olores de la comida que ofrecen sus restaurantes, ni el proceso de gentrificación que está atravesando. La herencia colonial de su arquitectura hace que Ciudad Vieja sea con frecuencia además un escenario para rodajes de series y películas. La ciudad se disfraza entonces de otras ciudades: a veces es París, otras veces Nueva York… Partiendo de esas dimensiones perdidas, y en el ejercicio de imaginar otros ‘fueras’ para el MAPI, convertimos esta visión extinta de la calle 25 de Mayo en otras ciudades posibles, y nos preguntamos: si el museo tiene la potencialidad de afectar el barrio, ¿cómo afecta el barrio al museo?'
-      home.setAttribute('visible', 'false')
-      document.getElementById('fuera').setAttribute('visible', 'true')
-      dentro.setAttribute('visible', 'false')
-      audioFuera.components.sound.playSound();
-      audioDentro.components.sound.stopSound();
-      clearInterval(dentroGlobalTimeout);
-      dentroTimeout && clearTimeout(dentroTimeout);
-      dentroSecondTimeout && clearTimeout(dentroSecondTimeout);
-      fueraInterval = setInterval(changeBackground, 6000);
-      fueraButton.classList.add('selected')
-      dentroButton.classList.remove('selected')
-      infoButton.classList.remove('selected')
-      fuera.setAttribute('src', './src/exterior/exterior_montevideo.jpg')
-    }
-
-    function goDentro() {
-      casitaButton.classList.remove('hidden')
-      showBoxes()
-      text.innerText = ''
-      text.innerText = 'El interior del MAPI nos habla de un devenir temporal, un relato histórico, social, identitario, que tuvo lugar en su espacio y que ha quedado súbitamente detenido en un presente pandémico, ocupado por la ausencia. O quizás cabe imaginar este museo vacío como un museo futuro, post-humano. En este juego de temporalidades especulativas, el interior del MAPI regresa a un pasado que pudo ser y nunca fue (su origen arquitectónico como establecimiento hidro-terápico) Y más atrás aún, regresa a un pasado que quizás fue: una selva precolombina que se abre paso a través de los muros, donde las piezas de las vitrinas conectan con su contexto originario, para regresar después al silencio inicial, lleno de interrogantes. '
-      audioFuera.components.sound.stopSound();
-      audioDentro.components.sound.playSound();
-      dentro.setAttribute('src', './src/interior/1.jpg')
-      clearInterval(fueraInterval);
-      setInterior()
-      dentroGlobalTimeout = setInterval(setInterior, 62000)
-      dentroButton.classList.add('selected')
-      fueraButton.classList.remove('selected')
-      infoButton.classList.remove('selected')
-      home.setAttribute('visible', 'false')
-      dentro.setAttribute('visible', 'true')
-      fuera.setAttribute('visible', 'false')
-    }
-    </script>
 </html>
