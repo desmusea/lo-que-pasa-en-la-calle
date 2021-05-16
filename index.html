@@ -3,9 +3,6 @@
   <head>
     <script src='https://aframe.io/releases/1.2.0/aframe.min.js'></script>
     <link rel='stylesheet' href='./src/style.css'>
-    <link rel="preload" as="image" crossOrigin="anonymous" href="./src/home.jpg">
-    <link rel="preload" as="image" crossOrigin="anonymous" href="./src/interior/1.jpg">
-    <link rel="preload" as="image" crossOrigin="anonymous" href="./src/exterior/exterior_montevideo.jpg">
     <title>Lo que pasa en la calle</title>
     <meta name="author" content="Desmusea">
     <meta name="description" content="Resultado del taller de mediación cultural digital 'Lo que pasa en la calle', dirigido por Desmusea para la primera edición del Festival de Arte, Pensamiento y Tecnología FAP-TEK del Centro Cultural de España en Montevideo">
@@ -32,16 +29,11 @@
         </p>
       </article>
     <a-scene>
-      <a-assets>
-        <audio id="interiorsound" src="./src/interior/interiorsound.mp4" preload="auto"></audio>
-        <audio id="exteriorsound" src="./src/exterior/exterioraudio.mp3" preload="auto"></audio>
-      </a-assets>
-
       <a-sky id='home' src='./src/home.jpg'></a-sky>
       <a-sky id='fuera' visible='false' src='./src/exterior/exterior_montevideo.jpg'></a-sky>
       <a-sky id='dentro' visible='false' src='./src/interior/1.jpg'></a-sky>
-      <a-entity id="dentroaudio" position="-10 0 0" sound="src: #interiorsound; loop: true;"></a-entity>
-      <a-entity id="exterioraudio" position="-10 0 0" sound="src: #exteriorsound; loop: true;"></a-entity>
+      <a-entity id="dentroaudio" position="-10 0 0" sound="src: url(./src/interior/interiorsound.mp4); loop: true;"></a-entity>
+      <a-entity id="exterioraudio" position="-10 0 0" sound="src: url(./src/exterior/exterioraudio.mp3); loop: true;"></a-entity>
     </a-scene>
     <script type='text/javascript' src="./index.js"></script>
   </body>
